@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class ImageListScreen extends StatefulWidget {
   const ImageListScreen({super.key});
+  static const routeName = '/ImageListScreen';
 
   @override
   State<ImageListScreen> createState() => _ImageListScreenState();
@@ -31,6 +32,8 @@ class _ImageListScreenState extends State<ImageListScreen> {
   Widget build(BuildContext context) {
     debugPrint("..@ list :$imageList");
     debugPrint("..@ list :${imageList.length}");
+    var height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       key: _scaffoldKey,
       endDrawer: Drawer(
@@ -41,8 +44,30 @@ class _ImageListScreenState extends State<ImageListScreen> {
           child: const ImageDrawer(),
         ),
       ),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Add images'),
+        leadingWidth: 70,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.cyan,
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
+            ),
+            child: const Icon(
+              Icons.keyboard_backspace_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text("Add Image"),
         actions: [
           GestureDetector(
             onTap: () async {
@@ -55,6 +80,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
           ),
           GestureDetector(
             onTap: () {
+              FocusScope.of(context).unfocus();
               _scaffoldKey.currentState!.openEndDrawer();
             },
             child: const Icon(Icons.settings),
@@ -68,75 +94,95 @@ class _ImageListScreenState extends State<ImageListScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 100,
-              ),
-              itemCount: imageList.length,
-              itemBuilder: (context, index) {
-                var image = imageList[index];
-                debugPrint("..@ image :${image.path}");
+            if (imageBytesList.isNotEmpty)
+              GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisExtent: 100,
+                ),
+                itemCount: imageList.length,
+                itemBuilder: (context, index) {
+                  var image = imageList[index];
+                  debugPrint("..@ image :${image.path}");
 
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image(
-                            height: 30,
-                            width: 30,
-                            fit: BoxFit.contain,
-                            image: FileImage(
-                              File(image.path),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
                             ),
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error_rounded);
-                            },
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image(
+                              height: 30,
+                              width: 30,
+                              fit: BoxFit.contain,
+                              image: FileImage(
+                                File(image.path),
+                              ),
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error_rounded);
+                              },
+                            ),
                           ),
                         ),
+                        Positioned.fill(
+                          top: 5,
+                          right: 5,
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: GestureDetector(
+                              onTap: () {
+                                imageList.removeAt(index);
+                                imageBytesList.removeAt(index);
+                                setState(() {});
+                              },
+                              child: const Icon(
+                                Icons.delete_forever,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              )
+            else
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: height * 0.4),
+                  const Center(
+                    child: Text(
+                      "No items !",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Positioned.fill(
-                        top: 5,
-                        right: 5,
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              imageList.removeAt(index);
-                              imageBytesList.removeAt(index);
-                              setState(() {});
-                            },
-                            child: const Icon(
-                              Icons.delete_forever,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                addImage();
-              },
-              child: const Text("Add more ..."),
-            )
+                ],
+              ),
+            if (imageBytesList.isNotEmpty)
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    addImage();
+                  },
+                  child: const Text("Add more ..."),
+                ),
+              )
           ],
         ),
       ),
@@ -155,11 +201,14 @@ class _ImageListScreenState extends State<ImageListScreen> {
   }
 
   addImage() async {
+    var source = ModalRoute.of(context)!.settings.arguments as ImageSource;
     FocusScope.of(context).unfocus();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    imageList.add(image!);
-    var bytes = await image.readAsBytes();
-    imageBytesList.add(bytes);
+    final XFile? image = await _picker.pickImage(source: source);
+    if (image != null) {
+      imageList.add(image);
+      var bytes = await image.readAsBytes();
+      imageBytesList.add(bytes);
+    }
     setState(() {});
   }
 
@@ -201,27 +250,6 @@ class _ImageListScreenState extends State<ImageListScreen> {
       ));
     }
 
-    // imageBytesList.map((e) {
-    //   return pdf.addPage(pw.MultiPage(
-    //     theme: myTheme,
-    //     margin: const pw.EdgeInsets.all(20),
-    //     pageFormat: PdfPageFormat.a4,
-    //     build: (pw.Context context) {
-    //       return pw.Container(
-    //         decoration: pw.BoxDecoration(
-    //           border: provider.enableBorder
-    //               ? pw.Border.all(color: PdfColors.black)
-    //               : pw.Border.all(),
-    //         ),
-    //         child: pw.Center(
-    //           child: pw.Image(
-    //             pw.MemoryImage(e),
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   ));
-    // });
     final output = await getExternalStorageDirectory();
     var now = DateTime.now().millisecondsSinceEpoch;
     final file = File("${output!.path}/$now.pdf");

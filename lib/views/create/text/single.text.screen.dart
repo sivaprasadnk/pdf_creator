@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -14,6 +13,7 @@ import 'package:provider/provider.dart';
 
 class SingleTextScreen extends StatefulWidget {
   const SingleTextScreen({super.key});
+  static const routeName = '/SingleTextScreen';
 
   @override
   State<SingleTextScreen> createState() => _SingleTextScreenState();
@@ -41,27 +41,40 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
             child: const DrawerWidget(),
           ),
         ),
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Text2pdf'),
+          leadingWidth: 70,
+          leading: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              Future.delayed(const Duration(seconds: 1)).then((value) {
+                Navigator.pop(context);
+              });
+            },
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(50),
+                  topRight: Radius.circular(50),
+                ),
+              ),
+              child: const Icon(
+                Icons.keyboard_backspace_rounded,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text("Add Text"),
           actions: [
             GestureDetector(
-              onTap: () async {
-                ClipboardData? cdata =
-                    await Clipboard.getData(Clipboard.kTextPlain);
-                String? copiedtext = cdata!.text;
-                _controller.text = copiedtext!;
-                setState(() {});
-              },
-              child: const Icon(Icons.paste),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
               onTap: () {
+                FocusScope.of(context).unfocus();
                 _scaffoldKey.currentState!.openEndDrawer();
               },
-              child: const Icon(Icons.menu),
+              child: const Icon(Icons.settings),
             ),
             const SizedBox(
               width: 10,
@@ -76,22 +89,29 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    onSaved: (newValue) {
-                      content = newValue!;
-                    },
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: "Type here",
-                      border: InputBorder.none,
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    color: Colors.cyan,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      onSaved: (newValue) {
+                        content = newValue!;
+                      },
+                      controller: _controller,
+                      decoration: const InputDecoration(
+                        hintText: "Type here",
+                        border: InputBorder.none,
+                      ),
+                      scrollPadding: const EdgeInsets.all(20.0),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 999,
+                      // minLines: 5,
+                      autofocus: false,
                     ),
-                    scrollPadding: const EdgeInsets.all(20.0),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 999,
-                    // minLines: 5,
-                    autofocus: false,
                   ),
                 ),
               ),

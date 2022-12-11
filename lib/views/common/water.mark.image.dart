@@ -23,7 +23,9 @@ class _WatermarkImageState extends State<WatermarkImage> {
               onPressed: () async {
                 final XFile? image =
                     await _picker.pickImage(source: ImageSource.gallery);
-                provider.updateImagePath(image!.path);
+                if (image != null) {
+                  provider.updateImagePath(image.path);
+                }
               },
               child: const Text("Select"),
             )

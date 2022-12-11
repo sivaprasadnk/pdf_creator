@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class TextListScreen extends StatefulWidget {
   const TextListScreen({super.key});
+  static const routeName = '/TextListScreen';
 
   @override
   State<TextListScreen> createState() => _TextListScreenState();
@@ -35,34 +36,38 @@ class _TextListScreenState extends State<TextListScreen> {
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
+              _scaffoldKey.currentState!.openEndDrawer();
             },
             child: const DrawerWidget(),
           ),
         ),
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Text2pdf'),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-                _controllerList.add(TextEditingController());
-                setState(() {});
-              },
-              child: const Icon(Icons.add),
+          leadingWidth: 70,
+          leading: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              Future.delayed(const Duration(milliseconds: 400)).then((value) {
+                Navigator.pop(context);
+              });
+            },
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(50),
+                  topRight: Radius.circular(50),
+                ),
+              ),
+              child: const Icon(
+                Icons.keyboard_backspace_rounded,
+                color: Colors.white,
+              ),
             ),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-              child: const Icon(Icons.settings),
-            ),
-            const SizedBox(
-              width: 10,
-            )
-          ],
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text("Add Text"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -132,8 +137,14 @@ class _TextListScreenState extends State<TextListScreen> {
     _formKey.currentState!.save();
     FocusScope.of(context).unfocus();
 
+    List<String> textList = [];
+    for (var i in _controllerList) {
+      if (i.text.trim().isNotEmpty) {
+        textList.add(i.text.trim());
+      }
+    }
+
     var provider = Provider.of<FilterProvider>(context, listen: false);
-    debugPrint(".. @bullets : ${provider.enableBullets}");
     Uint8List? imagebytes = provider.imagePath.isNotEmpty
         ? File(provider.imagePath).readAsBytesSync()
         : null;
@@ -144,129 +155,134 @@ class _TextListScreenState extends State<TextListScreen> {
       base: font,
     );
     pdf.addPage(
-      pw.Page(
+      pw.MultiPage(
         // textDirection: TextD,
         theme: myTheme,
         margin: const pw.EdgeInsets.all(20),
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return provider.enableBorder
-              ? pw.Stack(
-                  alignment: pw.Alignment.center,
-                  children: [
-                    if (imagebytes != null)
-                      pw.Image(
-                        pw.MemoryImage(
-                          imagebytes,
-                        ),
-                      ),
-                    pw.SizedBox.expand(
-                      child: pw.Container(
-                        alignment: align == "Left"
-                            ? pw.Alignment.centerLeft
-                            : align == "Right"
-                                ? pw.Alignment.centerRight
-                                : pw.Alignment.center,
-                        constraints: const pw.BoxConstraints(),
-                        decoration: pw.BoxDecoration(
-                          border: pw.Border.all(
-                            color: PdfColors.black,
+          return [
+            provider.enableBorder
+                ? pw.Stack(
+                    alignment: pw.Alignment.center,
+                    children: [
+                      if (imagebytes != null)
+                        pw.Image(
+                          pw.MemoryImage(
+                            imagebytes,
                           ),
                         ),
-                        child: pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Column(
-                            crossAxisAlignment: align == "Right"
-                                ? pw.CrossAxisAlignment.end
-                                : align == "Left"
-                                    ? pw.CrossAxisAlignment.start
-                                    : pw.CrossAxisAlignment.center,
-                            children: _controllerList
-                                .map(
-                                  (e) => pw.Row(
-                                    crossAxisAlignment:
-                                        pw.CrossAxisAlignment.center,
-                                    children: [
-                                      pw.SizedBox(
-                                        width: 10,
-                                      ),
-                                      if (provider.enableBullets)
-                                        pw.Container(
-                                          height: 5,
-                                          width: 5,
-                                          margin:
-                                              const pw.EdgeInsets.only(top: 3),
-                                          decoration: const pw.BoxDecoration(
-                                            color: PdfColors.black,
-                                            shape: pw.BoxShape.circle,
+                      pw.SizedBox.expand(
+                        child: pw.Container(
+                          alignment: align == "Left"
+                              ? pw.Alignment.centerLeft
+                              : align == "Right"
+                                  ? pw.Alignment.centerRight
+                                  : pw.Alignment.center,
+                          constraints: const pw.BoxConstraints(),
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border.all(
+                              color: PdfColors.black,
+                            ),
+                          ),
+                          child: pw.Padding(
+                            padding: const pw.EdgeInsets.all(8),
+                            child: pw.Column(
+                              crossAxisAlignment: align == "Right"
+                                  ? pw.CrossAxisAlignment.end
+                                  : align == "Left"
+                                      ? pw.CrossAxisAlignment.start
+                                      : pw.CrossAxisAlignment.center,
+                              children: textList
+                                  .map(
+                                    (e) => pw.Row(
+                                      crossAxisAlignment:
+                                          pw.CrossAxisAlignment.center,
+                                      children: [
+                                        pw.SizedBox(
+                                          width: 10,
+                                        ),
+                                        if (provider.enableBullets)
+                                          pw.Container(
+                                            height: 5,
+                                            width: 5,
+                                            margin: const pw.EdgeInsets.only(
+                                                top: 3),
+                                            decoration: const pw.BoxDecoration(
+                                              color: PdfColors.black,
+                                              shape: pw.BoxShape.circle,
+                                            ),
                                           ),
+                                        pw.SizedBox(
+                                          width: 10,
                                         ),
-                                      pw.SizedBox(
-                                        width: 10,
-                                      ),
-                                      pw.Text(
-                                        e.text,
-                                        style: pw.TextStyle(
-                                          fontSize: provider.fontSize,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                                .toList(),
+                                        pw.Text(
+                                          e,
+                                          style: pw.TextStyle(
+                                            fontSize: provider.fontSize,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                )
-              : pw.Stack(
-                  alignment: pw.Alignment.center,
-                  children: [
-                    if (imagebytes != null)
-                      pw.Image(
-                        pw.MemoryImage(
-                          imagebytes,
+                      )
+                    ],
+                  )
+                : pw.Stack(
+                    alignment: pw.Alignment.center,
+                    children: [
+                      if (imagebytes != null)
+                        pw.Image(
+                          pw.MemoryImage(
+                            imagebytes,
+                          ),
                         ),
-                      ),
-                    pw.Column(
-                      crossAxisAlignment: align == "Right"
-                          ? pw.CrossAxisAlignment.end
-                          : align == "Left"
-                              ? pw.CrossAxisAlignment.start
-                              : pw.CrossAxisAlignment.center,
-                      children: _controllerList
-                          .map(
-                            (e) => pw.Row(
-                              crossAxisAlignment: pw.CrossAxisAlignment.center,
-                              children: [
-                                pw.SizedBox(
-                                  width: 10,
-                                ),
-                                if (provider.enableBullets)
-                                  pw.Container(
-                                    height: 5,
-                                    width: 5,
-                                    margin: const pw.EdgeInsets.only(top: 3),
-                                    decoration: const pw.BoxDecoration(
-                                      color: PdfColors.black,
-                                      shape: pw.BoxShape.circle,
-                                    ),
+                      pw.Column(
+                        crossAxisAlignment: align == "Right"
+                            ? pw.CrossAxisAlignment.end
+                            : align == "Left"
+                                ? pw.CrossAxisAlignment.start
+                                : pw.CrossAxisAlignment.center,
+                        children: textList
+                            .map(
+                              (e) => pw.Row(
+                                crossAxisAlignment:
+                                    pw.CrossAxisAlignment.center,
+                                children: [
+                                  pw.SizedBox(
+                                    width: 10,
                                   ),
-                                pw.SizedBox(
-                                  width: 10,
-                                ),
-                                pw.Text(e.text,
+                                  if (provider.enableBullets)
+                                    pw.Container(
+                                      height: 5,
+                                      width: 5,
+                                      margin: const pw.EdgeInsets.only(top: 3),
+                                      decoration: const pw.BoxDecoration(
+                                        color: PdfColors.black,
+                                        shape: pw.BoxShape.circle,
+                                      ),
+                                    ),
+                                  pw.SizedBox(
+                                    width: 10,
+                                  ),
+                                  pw.Text(
+                                    e,
                                     style: pw.TextStyle(
                                       fontSize: provider.fontSize,
-                                    ))
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    )
-                  ],
-                );
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                            .toList(),
+                      )
+                    ],
+                  ),
+          ];
         },
       ),
     ); //

@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 class SavedListScreen extends StatefulWidget {
   const SavedListScreen({super.key});
+  static const routeName = '/SavedScreen';
 
   @override
   State<SavedListScreen> createState() => _SavedListScreenState();
@@ -24,14 +25,7 @@ class _SavedListScreenState extends State<SavedListScreen> {
   void _listofFiles() async {
     directory = (await getExternalStorageDirectory())!.path;
     fileList = Directory("$directory/").listSync();
-//     for(var file in fileList){
-//       final pageImage = await file.render();
-// final image = await pageImage.createImageDetached();
-// final pngData = await image.toByteData(ImageByteFormat.png);
-//     }
-//     Future.delayed(const Duration(seconds: 2)).then((value) {
-//     });
-      setState(() {});
+    setState(() {});
   }
 
   @override
@@ -39,10 +33,32 @@ class _SavedListScreenState extends State<SavedListScreen> {
     const kFontFam = 'pdf';
     const String? kFontPkg = null;
 
-    const IconData file_pdf =
+    const IconData filePdf =
         IconData(0xf1c1, fontFamily: kFontFam, fontPackage: kFontPkg);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        leadingWidth: 70,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.cyan,
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
+            ),
+            child: const Icon(
+              Icons.keyboard_backspace_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text("Saved"),
       ),
       body: fileList.isNotEmpty
@@ -76,14 +92,9 @@ class _SavedListScreenState extends State<SavedListScreen> {
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        // child: PdfViewer.openFile(
-                        //   file.path,
-                        //   params: const PdfViewerParams(pageNumber: 1),
-                        // ),
-                        // child: PdfThumbnail.fromFile(file.path, currentPage: 1,height: 100,),
                         child: const Center(
                           child: Icon(
-                            file_pdf,
+                            filePdf,
                             size: 55,
                             color: Colors.red,
                           ),

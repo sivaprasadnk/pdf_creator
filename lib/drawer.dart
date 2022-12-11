@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pdf_creator/provider/filter.provider.dart';
-import 'package:pdf_creator/utils/counter.widget.dart';
-import 'package:pdf_creator/utils/water.mark.image.dart';
+import 'package:pdf_creator/views/common/counter.widget.dart';
+import 'package:pdf_creator/views/common/water.mark.image.dart';
 import 'package:provider/provider.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -16,8 +16,25 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 100),
+          const SizedBox(height: 80),
+          const Padding(
+            padding: EdgeInsets.only(left: 20, bottom: 20),
+            child: Text(
+              "PDF Settings",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          const Divider(
+            indent: 20,
+            thickness: 1,
+            color: Colors.black,
+            endIndent: 20,
+          ),
           Consumer<FilterProvider>(builder: (_, provider, __) {
             return ListTile(
               title: const Text("Border"),
