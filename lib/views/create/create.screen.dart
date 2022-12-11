@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf_creator/views/common/create.list.item.dart';
 import 'package:pdf_creator/views/create/image/image.list.screen.dart';
+import 'package:pdf_creator/views/create/text/rte.screen.dart';
 import 'package:pdf_creator/views/create/text/single.text.screen.dart';
 import 'package:pdf_creator/views/create/text/text.list.screen.dart';
 
@@ -47,9 +48,9 @@ class _CreateScreenState extends State<CreateScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: height * 0.15),
+          SizedBox(height: height * 0.13),
           Padding(
-            padding: EdgeInsets.only(left: width * 0.15),
+            padding: EdgeInsets.only(left: width * 0.13),
             child: const Text(
               "Create",
               style: TextStyle(
@@ -66,7 +67,7 @@ class _CreateScreenState extends State<CreateScreen> {
               children: [
                 Container(
                   width: 300,
-                  height: 180,
+                  height: 220,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.cyan,
@@ -83,6 +84,10 @@ class _CreateScreenState extends State<CreateScreen> {
                       CreateListItem(
                         routeName: SingleTextScreen.routeName,
                         title: "Single Plain Text",
+                      ),
+                      CreateListItem(
+                        routeName: RteScreen.routeName,
+                        title: "Rich Text",
                       ),
 
                     ],
