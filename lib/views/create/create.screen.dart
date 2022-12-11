@@ -53,7 +53,9 @@ class _CreateScreenState extends State<CreateScreen> {
             child: const Text(
               "Create",
               style: TextStyle(
-                fontSize: 26,
+                fontSize: 28,
+                fontFamily: "Arvo",
+                color: Colors.red,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -64,7 +66,7 @@ class _CreateScreenState extends State<CreateScreen> {
               children: [
                 Container(
                   width: 300,
-                  height: 220,
+                  height: 180,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.cyan,
@@ -72,22 +74,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
                       CreateListItem(
                         routeName: TextListScreen.routeName,
                         title: "List",
                       ),
-                      SizedBox(height: 15),
                       CreateListItem(
                         routeName: SingleTextScreen.routeName,
                         title: "Single Plain Text",
                       ),
-                      SizedBox(height: 15),
-                      // CreateListItem(
-                      //   routeName: RteScreen.routeName,
-                      //   title: "Rich Text",
-                      // ),
 
                     ],
                   ),
@@ -133,14 +129,13 @@ class _CreateScreenState extends State<CreateScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
                       CreateListItem(
                         routeName: ImageListScreen.routeName,
                         arguments: ImageSource.gallery,
                         title: "Gallery",
                       ),
-                      SizedBox(height: 15),
                       CreateListItem(
                         routeName: ImageListScreen.routeName,
                         arguments: ImageSource.camera,

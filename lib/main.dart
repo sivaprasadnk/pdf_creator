@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
           title: 'Pdf Creator',
           theme: ThemeData(
             primarySwatch: Colors.cyan,
-            // primarySwatch: Colors.red,
           ),
           home: const HomeScreen(),
           routes: routes,

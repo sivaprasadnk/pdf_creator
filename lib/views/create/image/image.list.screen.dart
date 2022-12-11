@@ -30,8 +30,6 @@ class _ImageListScreenState extends State<ImageListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("..@ list :$imageList");
-    debugPrint("..@ list :${imageList.length}");
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -98,23 +96,24 @@ class _ImageListScreenState extends State<ImageListScreen> {
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 15, top: 50, right: 15),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
+                  childAspectRatio: 1,
                   crossAxisSpacing: 10,
-                  mainAxisExtent: 100,
+                  // mainAxisExtent: 150,
                 ),
                 itemCount: imageList.length,
                 itemBuilder: (context, index) {
                   var image = imageList[index];
-                  debugPrint("..@ image :${image.path}");
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Stack(
                       children: [
                         Container(
-                          height: 100,
-                          width: 100,
+                          height: 200,
+                          width: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.black,
@@ -124,8 +123,8 @@ class _ImageListScreenState extends State<ImageListScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image(
-                              height: 30,
-                              width: 30,
+                              height: 100,
+                              width: 100,
                               fit: BoxFit.contain,
                               image: FileImage(
                                 File(image.path),
@@ -165,7 +164,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
                   SizedBox(height: height * 0.4),
                   const Center(
                     child: Text(
-                      "No items !",
+                      "Click '+' at top to add images!",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -193,6 +192,9 @@ class _ImageListScreenState extends State<ImageListScreen> {
                 onPressed: generatePdf,
                 child: const Text(
                   "Generate PDF",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             )

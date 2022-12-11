@@ -15,7 +15,7 @@ class CreateListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, routeName);
+        Navigator.pushNamed(context, routeName, arguments: arguments);
       },
       child: Container(
         width: 150,

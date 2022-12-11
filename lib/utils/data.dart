@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pdf_creator/views/create/create.screen.dart';
 import 'package:pdf_creator/views/saved/saved.lists.dart';
 
+enum SavedView { list, grid }
+
+enum SavedSort { asc, desc }
+
 class HomeMenu {
   String title;
   IconData icon;

@@ -88,6 +88,13 @@ flutter:
     - family: pdf
       fonts:
         - asset: assets/icons/pdf.ttf
+    - family: sort
+      fonts:
+        - asset: assets/icons/sort.ttf    
+    - family: Arvo
+      fonts:
+        - asset: assets/Arvo-Bold.ttf    
+        - asset: assets/Arvo-Regular.ttf    
   # fonts:
   #   - family: Schyler
   #     fonts:

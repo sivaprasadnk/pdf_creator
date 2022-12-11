@@ -17,15 +17,17 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 250),
+            SizedBox(height: height * 0.3),
             const Text(
-              'Pdf Creator',
+              'PDF \nCreator',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontFamily: "Arvo",
+                color: Colors.red,
+                fontSize: 50,
               ),
             ),
-            SizedBox(height: height * 0.4),
+            SizedBox(height: height * 0.25),
             ListView.builder(
               itemCount: homeMenuList.length,
               shrinkWrap: true,

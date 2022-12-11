@@ -193,9 +193,9 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
           },
         ),
       ); //
-      final output = await getApplicationDocumentsDirectory();
+      final output = await getExternalStorageDirectory();
       var now = DateTime.now().millisecondsSinceEpoch;
-      final file = File("${output.path}/$now.pdf");
+      final file = File("${output!.path}/$now.pdf");
       await file.writeAsBytes(await pdf.save()).then((value) {
         OpenFilex.open(value.path);
       });
