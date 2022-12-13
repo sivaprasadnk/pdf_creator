@@ -14,6 +14,7 @@ void main() {
       statusBarIconBrightness: Brightness.dark, // status bar color
     ),
   );
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

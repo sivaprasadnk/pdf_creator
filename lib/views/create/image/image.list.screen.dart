@@ -9,6 +9,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_creator/image.drawer.dart';
 import 'package:pdf_creator/provider/filter.provider.dart';
+import 'package:pdf_creator/views/common/generate.button.dart';
+import 'package:pdf_creator/views/create/image/image.view.screen.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
@@ -111,27 +113,36 @@ class _ImageListScreenState extends State<ImageListScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Stack(
                       children: [
-                        Container(
-                          height: 200,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image(
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.contain,
-                              image: FileImage(
-                                File(image.path),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              ImageViewScreen.routeName,
+                              arguments: File(image.path),
+                            );
+                          },
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
                               ),
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.error_rounded);
-                              },
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image(
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                                image: FileImage(
+                                  File(image.path),
+                                ),
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error_rounded);
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -186,18 +197,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
         ),
       ),
       bottomNavigationBar: imageBytesList.isNotEmpty
-          ? SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                onPressed: generatePdf,
-                child: const Text(
-                  "Generate PDF",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            )
+          ? GenerateButton(onTap: generatePdf)
           : const SizedBox.shrink(),
     );
   }
@@ -254,7 +254,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
 
     final output = await getExternalStorageDirectory();
     var now = DateTime.now().millisecondsSinceEpoch;
-    final file = File("${output!.path}/$now.pdf");
+    final file = File("${output!.path}/Doc_$now.pdf");
     await file.writeAsBytes(await pdf.save()).then((value) {
       OpenFilex.open(value.path);
     });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pdf_creator/utils/data.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,12 +10,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String version = "";
 
   @override
   void initState() {
+    asyncInitState();
     super.initState();
   }
 
+  asyncInitState() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 50,
               ),
             ),
-            SizedBox(height: height * 0.25),
+            const SizedBox(height: 50),
+            Text("v$version"),
+            SizedBox(height: height * 0.18),
             ListView.builder(
               itemCount: homeMenuList.length,
               shrinkWrap: true,

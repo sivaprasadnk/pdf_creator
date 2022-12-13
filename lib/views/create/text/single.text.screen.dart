@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 // import "package:text2pdf/text2pdf.dart";
 import 'package:pdf_creator/drawer.dart';
 import 'package:pdf_creator/provider/filter.provider.dart';
+import 'package:pdf_creator/views/common/generate.button.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
@@ -118,15 +119,7 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: SizedBox(
-          height: 50,
-          child: ElevatedButton(
-            onPressed: generatePdf,
-            child: const Text(
-              "Generate PDF",
-            ),
-          ),
-        ),
+        bottomNavigationBar: GenerateButton(onTap: generatePdf),
       ),
     );
   }
@@ -195,7 +188,7 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
       ); //
       final output = await getExternalStorageDirectory();
       var now = DateTime.now().millisecondsSinceEpoch;
-      final file = File("${output!.path}/$now.pdf");
+      final file = File("${output!.path}/Doc_$now.pdf");
       await file.writeAsBytes(await pdf.save()).then((value) {
         OpenFilex.open(value.path);
       });

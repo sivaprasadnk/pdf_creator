@@ -3,8 +3,12 @@ extension FileExtension on String {
     return split('/').last;
   }
 
+  String get fileName {
+    return file.split('.').first;
+  }
+
   DateTime get dateTime {
-    var fileName = file.split('.').first;
-    return DateTime.fromMillisecondsSinceEpoch(int.parse(fileName));
+    var epochTime = fileName.split('Doc_').last;
+    return DateTime.fromMillisecondsSinceEpoch(int.parse(epochTime));
   }
 }

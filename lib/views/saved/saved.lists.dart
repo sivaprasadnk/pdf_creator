@@ -20,8 +20,7 @@ class SavedListScreen extends StatefulWidget {
 class _SavedListScreenState extends State<SavedListScreen> {
   String directory = "";
   List<FileItemModel> fileList = [];
-  List<int> indexList = [];
-  List<String> pathList = [];
+  List<XFile> selectedFileList = [];
   List thumbnailList = [];
 
   bool shareEnabled = false;
@@ -89,77 +88,71 @@ class _SavedListScreenState extends State<SavedListScreen> {
         elevation: 0,
         title: const Text("Saved"),
         actions: [
-          GestureDetector(
-            onTap: () {
-              List<XFile> shareList = [];
-              for (var item in fileList) {
-                if (item.isSelected) {
-                  shareList.add(XFile(item.path));
-                }
-              }
-              if (shareList.isNotEmpty) {
-                Share.shareXFiles(shareList, text: 'Sharing files');
-              }
-            },
-            child: const Icon(Icons.share),
-          ),
-          const SizedBox(width: 20),
-          GestureDetector(
-            onTap: () {
-              List<FileItemModel> deleteList = [];
-              for (var item in fileList) {
-                if (item.isSelected) {
-                  deleteList.add(item);
-                }
-              }
-              confirmDelete(deleteList);
-            },
-            child: const Icon(Icons.delete),
-          ),
-          const SizedBox(width: 20),
-          sort == SavedSort.asc
-              ? GestureDetector(
-                  onTap: () {
-                    fileList.sort((a, b) =>
-                        b.createdDateTime.compareTo(a.createdDateTime));
-                    sort = SavedSort.desc;
-                    setState(() {});
-                  },
-                  child: const Icon(
-                    sortUp,
-                    size: 15,
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    fileList.sort((a, b) =>
-                        a.createdDateTime.compareTo(b.createdDateTime));
-                    sort = SavedSort.asc;
-
-                    setState(() {});
-                  },
-                  child: const Icon(
-                    sortDown,
-                    size: 15,
-                  ),
-                ),
-          const SizedBox(width: 20),
-          if (view == SavedView.list)
+          if (selectedFileList.isNotEmpty)
             GestureDetector(
-              onTap: () {
-                view = SavedView.grid;
-                setState(() {});
+              onTap: () async {
+                var shareList = <XFile>[];
+                for (var i in selectedFileList) {
+                  shareList.add(XFile(i.path));
+                }
+                await Share.shareXFiles(selectedFileList);
               },
-              child: const Icon(Icons.grid_view_outlined),
-            )
-          else
-            GestureDetector(
-              onTap: () {
-                view = SavedView.list;
-                setState(() {});
-              },
-              child: const Icon(Icons.list_rounded),
+              child: const Icon(Icons.share),
             ),
+          const SizedBox(width: 20),
+          if (selectedFileList.isNotEmpty)
+            GestureDetector(
+              onTap: () {
+                confirmDelete();
+              },
+              child: const Icon(Icons.delete),
+            ),
+          const SizedBox(width: 20),
+          if (fileList.isNotEmpty)
+            sort == SavedSort.asc
+                ? GestureDetector(
+                    onTap: () {
+                      fileList.sort((a, b) =>
+                          b.createdDateTime.compareTo(a.createdDateTime));
+                      sort = SavedSort.desc;
+                      setState(() {});
+                    },
+                    child: const Icon(
+                      sortUp,
+                      size: 15,
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      fileList.sort((a, b) =>
+                          a.createdDateTime.compareTo(b.createdDateTime));
+                      sort = SavedSort.asc;
+
+                      setState(() {});
+                    },
+                    child: const Icon(
+                      sortDown,
+                      size: 15,
+                    ),
+                  ),
+          const SizedBox(width: 20),
+          if (fileList.isNotEmpty)
+            if (view == SavedView.list)
+              GestureDetector(
+                onTap: () {
+                  view = SavedView.grid;
+                  setState(() {});
+                },
+                child: const Icon(Icons.grid_view_outlined),
+              )
+            else
+              GestureDetector(
+                onTap: () {
+                  view = SavedView.list;
+                  setState(() {});
+                },
+                child: const Icon(Icons.list_rounded),
+              ),
           const SizedBox(width: 20)
         ],
       ),
@@ -170,27 +163,37 @@ class _SavedListScreenState extends State<SavedListScreen> {
             SizedBox(
               height: 50,
               width: width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text('Select all'),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Checkbox(
-                      value: selectAllEnabled,
-                      onChanged: (val) {
-                        selectAllEnabled = val!;
-                        for (var i in fileList) {
-                          i.isSelected = val;
-                        }
-                        setState(() {});
-                      }),
-                  const SizedBox(
-                    width: 15,
-                  )
-                ],
-              ),
+              child: fileList.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text('Select all'),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Checkbox(
+                            value: selectAllEnabled,
+                            onChanged: (val) {
+                              selectAllEnabled = val!;
+                              if (val) {
+                                for (var i in fileList) {
+                                  i.isSelected = val;
+                                  selectedFileList.add(XFile(i.path));
+                                }
+                              } else {
+                                for (var i in fileList) {
+                                  i.isSelected = val;
+                                }
+                                selectedFileList.clear();
+                              }
+                              setState(() {});
+                            }),
+                        const SizedBox(
+                          width: 15,
+                        )
+                      ],
+                    )
+                  : const SizedBox.shrink(),
             ),
             fileList.isNotEmpty
                 ? view == SavedView.grid
@@ -252,18 +255,18 @@ class _SavedListScreenState extends State<SavedListScreen> {
                                         value: fileItem.isSelected,
                                         onChanged: (value) {
                                           fileItem.isSelected = value!;
+                                          if (value) {
+                                            selectedFileList
+                                                .add(XFile(fileItem.path));
+                                          } else {
+                                            selectedFileList.removeWhere(
+                                                (element) =>
+                                                    element.path ==
+                                                    fileItem.path);
+                                          }
                                           setState(() {});
                                         },
                                       ),
-                                      // child: GestureDetector(
-                                      //   onTap: () {
-                                      //     fileItem.delete();
-                                      //     fileList.removeWhere((element) =>
-                                      //         element.path == fileItem.path);
-                                      //     setState(() {});
-                                      //   },
-                                      //   child: const Icon(Icons.delete_forever),
-                                      // ),
                                     ),
                                   )
                                 ],
@@ -278,7 +281,7 @@ class _SavedListScreenState extends State<SavedListScreen> {
                           itemCount: fileList.length,
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(
-                              left: 20, top: 20, right: 15),
+                              left: 10, top: 20, right: 15),
                           separatorBuilder: (context, index) {
                             return const Divider(
                               color: Colors.black,
@@ -293,7 +296,7 @@ class _SavedListScreenState extends State<SavedListScreen> {
                             return SizedBox(
                               height: 55,
                               child: ListTile(
-                                title: Text("Doc_${fileItem.path.file}"),
+                                title: Text("${fileItem.path.fileName}.pdf"),
                                 subtitle:
                                     Text(date.toString().split('.').first),
                                 dense: false,
@@ -306,6 +309,14 @@ class _SavedListScreenState extends State<SavedListScreen> {
                                   value: fileItem.isSelected,
                                   onChanged: (value) {
                                     fileItem.isSelected = value!;
+
+                                    if (value) {
+                                      selectedFileList
+                                          .add(XFile(fileItem.path));
+                                    } else {
+                                      selectedFileList.removeWhere((element) =>
+                                          element.path == fileItem.path);
+                                    }
                                     setState(() {});
                                   },
                                 ),
@@ -326,14 +337,14 @@ class _SavedListScreenState extends State<SavedListScreen> {
     );
   }
 
-  confirmDelete(List<FileItemModel> fileItemList) async {
+  confirmDelete() async {
     await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text("Confirm delete"),
             content: Text(
-                "Are you sure to delete these ${fileItemList.length} files ?"),
+                "Are you sure to delete these ${selectedFileList.length} files ?"),
             actions: [
               TextButton(
                 onPressed: () {
@@ -343,12 +354,13 @@ class _SavedListScreenState extends State<SavedListScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  for (var i in fileItemList) {
+                  Navigator.pop(context);
+                  for (var i in selectedFileList) {
                     File(i.path).delete();
                     fileList.removeWhere((element) => element.path == i.path);
                   }
+                  selectedFileList.clear();
                   setState(() {});
-                  Navigator.pop(context);
                 },
                 child: const Text("Yes"),
               )

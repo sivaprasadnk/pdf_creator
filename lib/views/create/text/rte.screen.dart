@@ -5,6 +5,7 @@ import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf_creator/drawer.dart';
+import 'package:pdf_creator/views/common/generate.button.dart';
 
 class RteScreen extends StatefulWidget {
   const RteScreen({super.key});
@@ -89,15 +90,7 @@ class _RteScreenState extends State<RteScreen> {
           ],
           options: const HtmlEditorOptions(),
         ),
-        bottomNavigationBar: SizedBox(
-          height: 50,
-          child: ElevatedButton(
-            onPressed: generatePdf,
-            child: const Text(
-              "Generate PDF",
-            ),
-          ),
-        ),
+        bottomNavigationBar: GenerateButton(onTap: generatePdf),
       ),
     );
   }
