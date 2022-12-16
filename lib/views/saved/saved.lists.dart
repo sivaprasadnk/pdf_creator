@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf_creator/model/file.item.model.dart';
 import 'package:pdf_creator/utils/data.dart';
 import 'package:pdf_creator/utils/file.extensions.dart';
+import 'package:pdf_creator/views/create/create.screen.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SavedListScreen extends StatefulWidget {
@@ -156,6 +157,31 @@ class _SavedListScreenState extends State<SavedListScreen> {
           const SizedBox(width: 20)
         ],
       ),
+      // bottomNavigationBar: GestureDetector(
+      //   onTap: () {
+      //     Navigator.pushReplacementNamed(
+      //       context,
+      //       CreateScreen.routeName,
+      //     );
+      //   },
+      //   child: Container(
+      //     height: 50,
+      //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      //     decoration: BoxDecoration(
+      //       color: Theme.of(context).primaryColor,
+      //       borderRadius: BorderRadius.circular(8),
+      //     ),
+      //     child: const Center(
+      //       child: Text(
+      //         'Create New',
+      //         style: TextStyle(
+      //           color: Colors.white,
+      //           fontWeight: FontWeight.w500,
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: SizedBox.expand(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 // import "package:text2pdf/text2pdf.dart";
 import 'package:pdf_creator/provider/filter.provider.dart';
 import 'package:pdf_creator/utils/routes.dart';
-import 'package:pdf_creator/views/home.screen.dart';
+import 'package:pdf_creator/views/splash.screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.cyan,
           ),
-          home: const HomeScreen(),
+          home: const SplashScreen(),
           routes: routes,
         ),
       ),

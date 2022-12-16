@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  pasteboard
   pdfx
   printing
   share_plus

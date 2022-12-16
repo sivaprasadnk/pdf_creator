@@ -141,6 +141,7 @@ class _TextListScreenState extends State<TextListScreen> {
   generatePdf() async {
     _formKey.currentState!.save();
     FocusScope.of(context).unfocus();
+    await PdfGoogleFonts.notoColorEmoji().then((emoji) async {
 
     List<String> textList = [];
     for (var i in _controllerList) {
@@ -225,6 +226,7 @@ class _TextListScreenState extends State<TextListScreen> {
                                           e,
                                           style: pw.TextStyle(
                                             fontSize: provider.fontSize,
+                                              fontFallback: [emoji],
                                           ),
                                         )
                                       ],
@@ -278,6 +280,7 @@ class _TextListScreenState extends State<TextListScreen> {
                                     e,
                                     style: pw.TextStyle(
                                       fontSize: provider.fontSize,
+                                        fontFallback: [emoji],
                                     ),
                                   )
                                 ],
@@ -297,5 +300,7 @@ class _TextListScreenState extends State<TextListScreen> {
     await file.writeAsBytes(await pdf.save()).then((value) {
       OpenFilex.open(value.path);
     });
+    });
+
   }
 }

@@ -85,10 +85,10 @@ class _RteScreenState extends State<RteScreen> {
         body: HtmlEditor(
           hint: "Type here",
           controller: controller,
-          toolbar: const [
-            // Toolbar()
-          ],
-          options: const HtmlEditorOptions(),
+          toolbar: const [],
+          options: const HtmlEditorOptions(
+            showBottomToolbar: false,
+          ),
         ),
         bottomNavigationBar: GenerateButton(onTap: generatePdf),
       ),

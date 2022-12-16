@@ -126,72 +126,76 @@ class _SingleTextScreenState extends State<SingleTextScreen> {
 
   generatePdf() async {
     _formKey.currentState!.save();
-    FocusScope.of(context).unfocus();
-    if (content.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Nothing to convert !')));
-    } else {
-      var provider = Provider.of<FilterProvider>(context, listen: false);
-      var align = provider.alignment;
-      final pdf = pw.Document();
-      final font = await PdfGoogleFonts.openSansRegular();
-      var myTheme = pw.ThemeData.withFont(
-        base: font,
-      );
-      pdf.addPage(
-        pw.Page(
-          theme: myTheme,
-          margin: const pw.EdgeInsets.all(20),
-          pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return provider.enableBorder
-                ? pw.SizedBox.expand(
-                    child: pw.Container(
-                    constraints: const pw.BoxConstraints(),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(
-                        color: PdfColors.black,
-                      ),
-                    ),
-                    child: pw.Padding(
-                      padding: const pw.EdgeInsets.all(8),
-                      child: pw.Text(
-                        content,
-                        style: pw.TextStyle(
-                          fontSize: provider.fontSize,
+    await PdfGoogleFonts.notoColorEmoji().then((emoji) async {
+      FocusScope.of(context).unfocus();
+      if (content.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Nothing to convert !')));
+      } else {
+        var provider = Provider.of<FilterProvider>(context, listen: false);
+        var align = provider.alignment;
+        final pdf = pw.Document();
+        final font = await PdfGoogleFonts.openSansRegular();
+        var myTheme = pw.ThemeData.withFont(
+          base: font,
+        );
+        pdf.addPage(
+          pw.Page(
+            theme: myTheme,
+            margin: const pw.EdgeInsets.all(20),
+            pageFormat: PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return provider.enableBorder
+                  ? pw.SizedBox.expand(
+                      child: pw.Container(
+                      constraints: const pw.BoxConstraints(),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(
+                          color: PdfColors.black,
                         ),
-                        textAlign: align == "Left"
-                            ? pw.TextAlign.left
-                            : align == "Right"
-                                ? pw.TextAlign.right
-                                : align == "Justify"
-                                    ? pw.TextAlign.justify
-                                    : pw.TextAlign.center,
                       ),
-                    ),
-                  ))
-                : pw.Text(
-                    content,
-                    style: pw.TextStyle(
-                      fontSize: provider.fontSize,
-                    ),
-                    textAlign: align == "Left"
-                        ? pw.TextAlign.left
-                        : align == "Right"
-                            ? pw.TextAlign.right
-                            : align == "Justify"
-                                ? pw.TextAlign.justify
-                                : pw.TextAlign.center,
-                  );
-          },
-        ),
-      ); //
-      final output = await getExternalStorageDirectory();
-      var now = DateTime.now().millisecondsSinceEpoch;
-      final file = File("${output!.path}/Doc_$now.pdf");
-      await file.writeAsBytes(await pdf.save()).then((value) {
-        OpenFilex.open(value.path);
-      });
-    }
+                      child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(8),
+                        child: pw.Text(
+                          content,
+                          style: pw.TextStyle(
+                            fontSize: provider.fontSize,
+                            fontFallback: [emoji],
+                          ),
+                          textAlign: align == "Left"
+                              ? pw.TextAlign.left
+                              : align == "Right"
+                                  ? pw.TextAlign.right
+                                  : align == "Justify"
+                                      ? pw.TextAlign.justify
+                                      : pw.TextAlign.center,
+                        ),
+                      ),
+                    ))
+                  : pw.Text(
+                      content,
+                      style: pw.TextStyle(
+                        fontSize: provider.fontSize,
+                        fontFallback: [emoji],
+                      ),
+                      textAlign: align == "Left"
+                          ? pw.TextAlign.left
+                          : align == "Right"
+                              ? pw.TextAlign.right
+                              : align == "Justify"
+                                  ? pw.TextAlign.justify
+                                  : pw.TextAlign.center,
+                    );
+            },
+          ),
+        ); //
+        final output = await getExternalStorageDirectory();
+        var now = DateTime.now().millisecondsSinceEpoch;
+        final file = File("${output!.path}/Doc_$now.pdf");
+        await file.writeAsBytes(await pdf.save()).then((value) {
+          OpenFilex.open(value.path);
+        });
+      }
+    });
   }
 }
