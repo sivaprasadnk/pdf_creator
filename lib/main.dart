@@ -1,5 +1,7 @@
+import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pdf_creator/provider/app.provider.dart';
 // import "package:text2pdf/text2pdf.dart";
 import 'package:pdf_creator/provider/filter.provider.dart';
 import 'package:pdf_creator/utils/routes.dart';
@@ -23,28 +25,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FilterProvider>(
-          create: ((context) => FilterProvider()),
-        )
-      ],
-      child: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Pdf Creator',
-          theme: ThemeData(
-            primarySwatch: Colors.cyan,
+    return BetterFeedback(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<FilterProvider>(
+            create: ((context) => FilterProvider()),
           ),
-          home: const SplashScreen(),
-          routes: routes,
+          ChangeNotifierProvider<AppProvider>(
+            create: ((context) => AppProvider()),
+          )
+        ],
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Pdf Creator',
+            theme: ThemeData(
+              primarySwatch: Colors.cyan,
+            ),
+            home: const SplashScreen(),
+            routes: routes,
+          ),
         ),
       ),
     );

@@ -83,11 +83,18 @@ class _RteScreenState extends State<RteScreen> {
           ],
         ),
         body: HtmlEditor(
-          hint: "Type here",
+          htmlToolbarOptions: const HtmlToolbarOptions(
+            toolbarPosition: ToolbarPosition.belowEditor,
+          ),
+          // hint: "Type here",
           controller: controller,
-          toolbar: const [],
-          options: const HtmlEditorOptions(
-            showBottomToolbar: false,
+          // toolbar: const [],
+          htmlEditorOptions: const HtmlEditorOptions(
+            // showBottomToolbar: false,
+            hint: "Type here..",
+            spellCheck: false,
+            disabled: false,
+            // initialText:
           ),
         ),
         bottomNavigationBar: GenerateButton(onTap: generatePdf),
@@ -99,7 +106,7 @@ class _RteScreenState extends State<RteScreen> {
     FocusScope.of(context).unfocus();
     controller.clearFocus();
     await controller.getText().then((data1) async {
-      if (data1!.isEmpty) {
+      if (data1.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Nothing to convert !')));

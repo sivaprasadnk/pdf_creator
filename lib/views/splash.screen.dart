@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pdf_creator/provider/app.provider.dart';
 import 'package:pdf_creator/views/create/create.screen.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,10 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> checkForUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
       // _updateInfo = info;
-      if (_updateInfo?.updateAvailability ==
+      if (_updateInfo?.updateAvailability !=
           UpdateAvailability.updateAvailable) {
         InAppUpdate.performImmediateUpdate()
             .catchError((e) => showSnack(e.toString()));
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, CreateScreen.routeName, (route) => false);
       }
     }).catchError((e) {
       showSnack(e.toString());
@@ -49,21 +54,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   asyncInitState() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
-    setState(() {});
-    await checkForUpdate();
+    await PackageInfo.fromPlatform().then((packageInfo) async {
+      version = packageInfo.version;
+      setState(() {});
+      Provider.of<AppProvider>(context, listen: false).updateVersion(version);
+      await checkForUpdate();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, CreateScreen.routeName, (route) => false);
+          checkForUpdate();
         },
         child: Container(
           height: 50,
@@ -99,9 +104,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 50),
-            Center(
-              child: Text("v$version"),
-            ),
+            if (version.isNotEmpty)
+              Center(
+                child: Text("v$version"),
+              ),
             SizedBox(height: height * 0.18),
           ],
         ),
