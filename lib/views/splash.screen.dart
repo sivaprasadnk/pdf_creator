@@ -27,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
     InAppUpdate.checkForUpdate().then((info) {
       if (info.updateAvailability ==
           UpdateAvailability.updateAvailable) {
-        debugPrint('here');
         InAppUpdate.performImmediateUpdate()
             .catchError((e) => showSnack(e.toString()));
       } else {
