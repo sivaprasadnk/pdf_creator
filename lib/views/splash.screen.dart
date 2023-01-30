@@ -17,7 +17,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String version = "";
 
-  AppUpdateInfo? _updateInfo;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -26,9 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> checkForUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
-      // _updateInfo = info;
-      if (_updateInfo?.updateAvailability !=
+      if (info.updateAvailability ==
           UpdateAvailability.updateAvailable) {
+        debugPrint('here');
         InAppUpdate.performImmediateUpdate()
             .catchError((e) => showSnack(e.toString()));
       } else {
@@ -58,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
       version = packageInfo.version;
       setState(() {});
       Provider.of<AppProvider>(context, listen: false).updateVersion(version);
-      await checkForUpdate();
+      // await checkForUpdate();
     });
   }
 

@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  pdfx
   printing
   share_plus
   url_launcher_windows

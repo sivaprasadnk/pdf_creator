@@ -4,7 +4,6 @@ import 'package:pdf_creator/provider/app.provider.dart';
 import 'package:pdf_creator/utils/constants.dart';
 import 'package:pdf_creator/views/common/create.list.item.dart';
 import 'package:pdf_creator/views/create/image/image.list.screen.dart';
-import 'package:pdf_creator/views/create/text/rte.screen.dart';
 import 'package:pdf_creator/views/create/text/single.text.screen.dart';
 import 'package:pdf_creator/views/create/text/text.list.screen.dart';
 import 'package:pdf_creator/views/saved/saved.lists.dart';
@@ -248,10 +247,10 @@ class _CreateScreenState extends State<CreateScreen> {
                         routeName: SingleTextScreen.routeName,
                         title: "Single Plain Text",
                       ),
-                      CreateListItem(
-                        routeName: RteScreen.routeName,
-                        title: "Rich Text",
-                      ),
+                      // CreateListItem(
+                      //   routeName: RteScreen.routeName,
+                      //   title: "Rich Text",
+                      // ),
                     ],
                   ),
                 ),
