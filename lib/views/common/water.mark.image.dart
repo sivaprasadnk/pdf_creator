@@ -13,6 +13,7 @@ class WatermarkImage extends StatefulWidget {
 }
 
 class _WatermarkImageState extends State<WatermarkImage> {
+  //
   final ImagePicker _picker = ImagePicker();
 
   @override
