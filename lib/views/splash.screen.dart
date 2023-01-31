@@ -20,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  // final bool _flexibleUpdateAvailable = false;
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> checkForUpdate() async {
