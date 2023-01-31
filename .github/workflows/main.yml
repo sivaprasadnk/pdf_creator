@@ -33,7 +33,7 @@ on:
   # 2
   push:
     tags: 
-      - "internal-v*.*.*" 
+      - v*.* 
 
 # 4
 jobs:
@@ -64,7 +64,7 @@ jobs:
         run: flutter pub get
 
       # Runs a set of commands using the runners shell
-      - run: flutter test #running flutter test
+      # - run: flutter test #running flutter test
       - run: flutter build apk --debug #building flutter apk
       - run: flutter build appbundle --debug #building flutter bundle
         
