@@ -33,7 +33,7 @@ on:
   # 2
   push:
     tags: 
-      - “v*”
+      - "internal-v*.*.*" 
 
 # 4
 jobs:
