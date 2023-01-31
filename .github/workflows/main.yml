@@ -54,6 +54,8 @@ jobs:
 
       - run: flutter build apk --debug #building flutter apk
       - run: flutter build appbundle --debug #building flutter bundle
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/debug/*.apk"
         
