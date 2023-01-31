@@ -21,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> checkForUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
       if (info.updateAvailability ==
@@ -55,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
       version = packageInfo.version;
       setState(() {});
       Provider.of<AppProvider>(context, listen: false).updateVersion(version);
-      // await checkForUpdate();
     });
   }
 
