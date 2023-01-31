@@ -32,7 +32,8 @@ name: Android Release
 on:
   # 2
   push:
-    branches: [ "qa" ]
+    tags: 
+      - “v*”
 
 # 4
 jobs:
