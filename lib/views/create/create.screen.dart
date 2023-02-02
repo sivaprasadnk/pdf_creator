@@ -9,6 +9,7 @@ import 'package:pdf_creator/views/create/image/image.list.screen.dart';
 import 'package:pdf_creator/views/create/text/single.text.screen.dart';
 import 'package:pdf_creator/views/create/text/text.list.screen.dart';
 import 'package:pdf_creator/views/saved/saved.lists.dart';
+import 'package:pdf_creator/views/splash.screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import "package:url_launcher/url_launcher.dart";
@@ -22,7 +23,6 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-
   showToast(String text) {
     Fluttertoast.showToast(msg: text);
   }
@@ -119,11 +119,17 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   .updateAvailable) {
                                             showToast('Update Available !');
                                             InAppUpdate.performImmediateUpdate()
-                                                .catchError((e) =>
+                                                .then((value) {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context, MaterialPageRoute(
+                                                      builder: (_) {
+                                                return const SplashScreen();
+                                              }), (route) => false);
+                                            }).catchError((e) =>
                                                     showToast(e.toString()));
                                           } else {
                                             showToast(
-                                                'Update Not Available !! Please try later! ');
+                                                'No Updates available !! Please try later! ');
                                           }
                                         }).catchError((e) {
                                           showToast(e.toString());
