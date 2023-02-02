@@ -16,12 +16,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String version = "";
 
+  @override
+  void initState() {
+    asyncInitState();
+    super.initState();
+  }
 
   asyncInitState() async {
     await PackageInfo.fromPlatform().then((packageInfo) async {
       version = packageInfo.version;
-      setState(() {});
       Provider.of<AppProvider>(context, listen: false).updateVersion(version);
+      setState(() {});
     });
   }
 
