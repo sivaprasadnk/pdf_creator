@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:in_app_update/in_app_update.dart';
+// import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pdf_creator/provider/app.provider.dart';
 import 'package:pdf_creator/views/create/create.screen.dart';
@@ -17,23 +17,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String version = "";
 
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-
   Future<void> checkForUpdate() async {
-    InAppUpdate.checkForUpdate().then((info) {
-      if (info.updateAvailability ==
-          UpdateAvailability.updateAvailable) {
-        InAppUpdate.performImmediateUpdate()
-            .catchError((e) => showSnack(e.toString()));
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-            context, CreateScreen.routeName, (route) => false);
-      }
-    }).catchError((e) {
-      showSnack(e.toString());
-    });
+    // InAppUpdate.checkForUpdate().then((info) {
+    //   if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+    //     InAppUpdate.performImmediateUpdate()
+    //         .catchError((e) => showSnack(e.toString()));
+    //   } else {}
+    // }).catchError((e) {
+    //   showSnack(e.toString());
+    // });
   }
 
   showSnack(String text) {
@@ -45,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    asyncInitState();
+    // asyncInitState();
     super.initState();
   }
 
@@ -63,7 +57,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          checkForUpdate();
+          Navigator.pushNamedAndRemoveUntil(
+              context, CreateScreen.routeName, (route) => false);
         },
         child: Container(
           height: 50,
