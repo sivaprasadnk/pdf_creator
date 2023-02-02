@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:pdf_creator/provider/app.provider.dart';
 import 'package:pdf_creator/utils/constants.dart';
 import 'package:pdf_creator/views/common/create.list.item.dart';
@@ -20,6 +22,11 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
+
+  showToast(String text) {
+    Fluttertoast.showToast(msg: text);
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -36,7 +43,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Container(
-                        height: 260,
+                        height: 310,
                         width: double.infinity,
                         margin: const EdgeInsets.only(top: 0),
                         decoration: const BoxDecoration(
@@ -97,6 +104,38 @@ class _CreateScreenState extends State<CreateScreen> {
                                   ],
                                 );
                               }),
+                              const SizedBox(height: 28),
+                              Row(
+                                children: [
+                                  const Text("Check for update! "),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      try {
+                                        await InAppUpdate.checkForUpdate()
+                                            .then((info) {
+                                          if (info.updateAvailability ==
+                                              UpdateAvailability
+                                                  .updateAvailable) {
+                                            showToast('Update Available !');
+                                            InAppUpdate.performImmediateUpdate()
+                                                .catchError((e) =>
+                                                    showToast(e.toString()));
+                                          } else {
+                                            showToast(
+                                                'Update Not Available !! Please try later! ');
+                                          }
+                                        }).catchError((e) {
+                                          showToast(e.toString());
+                                        });
+                                      } catch (er) {
+                                        showToast(er.toString());
+                                      }
+                                    },
+                                    child: const Icon(Icons.update),
+                                  )
+                                ],
+                              ),
                               const SizedBox(height: 28),
                               GestureDetector(
                                 onTap: () {

@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 // import 'package:in_app_update/in_app_update.dart';
@@ -17,31 +16,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String version = "";
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
-  Future<void> checkForUpdate() async {
-    // InAppUpdate.checkForUpdate().then((info) {
-    //   if (info.updateAvailability == UpdateAvailability.updateAvailable) {
-    //     InAppUpdate.performImmediateUpdate()
-    //         .catchError((e) => showSnack(e.toString()));
-    //   } else {}
-    // }).catchError((e) {
-    //   showSnack(e.toString());
-    // });
-  }
-
-  showSnack(String text) {
-    if (_scaffoldKey.currentContext != null) {
-      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
-          .showSnackBar(SnackBar(content: Text(text)));
-    }
-  }
-
-  @override
-  void initState() {
-    // asyncInitState();
-    super.initState();
-  }
 
   asyncInitState() async {
     await PackageInfo.fromPlatform().then((packageInfo) async {
