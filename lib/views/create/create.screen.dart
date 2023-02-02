@@ -9,7 +9,6 @@ import 'package:pdf_creator/views/create/image/image.list.screen.dart';
 import 'package:pdf_creator/views/create/text/single.text.screen.dart';
 import 'package:pdf_creator/views/create/text/text.list.screen.dart';
 import 'package:pdf_creator/views/saved/saved.lists.dart';
-import 'package:pdf_creator/views/splash.screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import "package:url_launcher/url_launcher.dart";
@@ -119,13 +118,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   .updateAvailable) {
                                             showToast('Update Available !');
                                             InAppUpdate.performImmediateUpdate()
-                                                .then((value) {
-                                              Navigator.pushAndRemoveUntil(
-                                                  context, MaterialPageRoute(
-                                                      builder: (_) {
-                                                return const SplashScreen();
-                                              }), (route) => false);
-                                            }).catchError((e) =>
+                                                
+                                                .catchError((e) =>
                                                     showToast(e.toString()));
                                           } else {
                                             showToast(
