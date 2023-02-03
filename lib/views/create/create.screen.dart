@@ -245,25 +245,6 @@ class _CreateScreenState extends State<CreateScreen> {
           ),
           const SizedBox(width: 15)
         ],
-        // leadingWidth: 70,
-        // leading: GestureDetector(
-        //   onTap: () {
-        //     Navigator.pop(context);
-        //   },
-        //   child: Container(
-        //     decoration: const BoxDecoration(
-        //       color: Colors.cyan,
-        //       borderRadius: BorderRadius.only(
-        //         bottomRight: Radius.circular(50),
-        //         topRight: Radius.circular(50),
-        //       ),
-        //     ),
-        //     child: const Icon(
-        //       Icons.keyboard_backspace_rounded,
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        // ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
