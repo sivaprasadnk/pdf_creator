@@ -8,6 +8,8 @@ import 'package:pdf_creator/utils/routes.dart';
 import 'package:pdf_creator/views/splash.screen.dart';
 import 'package:provider/provider.dart';
 
+// flutter build appbundle --split-debug-info=build/app/outputs/symbols
+
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
