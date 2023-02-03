@@ -33,20 +33,23 @@ class _CreateScreenState extends State<CreateScreen> {
           var version = update.availableVersionCode;
           showDialog(
               context: context,
-              builder: (context) {
+              builder: (ctx) {
                 return AlertDialog(
                   title: const Text("Update Available ! "),
                   content: Text("version :$version"),
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(ctx);
                       },
                       child: const Text('Update later!'),
                     ),
                     TextButton(
                       onPressed: () {
                         try {
+                          Navigator.pop(ctx);
+                          // Navigator.pop(context);
+
                           performUpdate(version.toString());
                         } catch (err) {
                           Fluttertoast.showToast(msg: err.toString());
@@ -71,7 +74,7 @@ class _CreateScreenState extends State<CreateScreen> {
   performUpdate(String version) async {
     showDialog(
         context: context,
-        builder: (context) {
+        builder: (ctx) {
           return AlertDialog(
             title: const Text("Select update type "),
             // content: Text("version :$version"),
@@ -82,9 +85,11 @@ class _CreateScreenState extends State<CreateScreen> {
                     InAppUpdate.startFlexibleUpdate().then((result) {
                       if (result == AppUpdateResult.success) {
                         Fluttertoast.showToast(msg: 'Update Success !');
+                        InAppUpdate.completeFlexibleUpdate();
                       } else if (result == AppUpdateResult.inAppUpdateFailed) {
                         Fluttertoast.showToast(msg: 'Update Failed !');
                       } else if (result == AppUpdateResult.userDeniedUpdate) {
+                        Navigator.pop(ctx);
                         Fluttertoast.showToast(msg: 'Update Denied !');
                       }
                     });
@@ -127,9 +132,9 @@ class _CreateScreenState extends State<CreateScreen> {
           GestureDetector(
             onTap: () {
               showModalBottomSheet(
-                  isDismissible: false,
+                  isDismissible: true,
                   context: context,
-                  builder: (context) {
+                  builder: (ctx) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Container(
