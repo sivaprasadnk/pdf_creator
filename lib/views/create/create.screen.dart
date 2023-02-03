@@ -116,9 +116,12 @@ class _CreateScreenState extends State<CreateScreen> {
                                           if (info.updateAvailability ==
                                               UpdateAvailability
                                                   .updateAvailable) {
-                                            showToast('Update Available !');
+                                            var update =
+                                                info.availableVersionCode;
+
+                                            showToast(
+                                                'Update Available ! $update');
                                             InAppUpdate.performImmediateUpdate()
-                                                
                                                 .catchError((e) =>
                                                     showToast(e.toString()));
                                           } else {
