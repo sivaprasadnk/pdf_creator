@@ -26,7 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await PackageInfo.fromPlatform().then((packageInfo) async {
       version = packageInfo.version;
       setState(() {});
-      Provider.of<AppProvider>(context, listen: false).updateVersion(version);
+      Provider.of<AppProvider>(context, listen: false)
+          .updateVersion("$version +${packageInfo.buildNumber}");
     });
   }
 

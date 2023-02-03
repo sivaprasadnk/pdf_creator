@@ -26,6 +26,97 @@ class _CreateScreenState extends State<CreateScreen> {
     Fluttertoast.showToast(msg: text);
   }
 
+  confirmUpdate() async {
+    try {
+      await InAppUpdate.checkForUpdate().then((update) {
+        if (update.updateAvailability == UpdateAvailability.updateAvailable) {
+          var version = update.availableVersionCode;
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Update Available ! "),
+                  content: Text("version :$version"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Update later!'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        try {
+                          performUpdate(version.toString());
+                        } catch (err) {
+                          Fluttertoast.showToast(msg: err.toString());
+                        }
+                      },
+                      child: const Text('Update now!'),
+                    ),
+                  ],
+                );
+              });
+        } else {
+          showToast('No Updates available !! Please try later! ');
+        }
+      }).catchError((e) {
+        showToast(e.toString());
+      });
+    } catch (er) {
+      showToast(er.toString());
+    }
+  }
+
+  performUpdate(String version) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Select update type "),
+            // content: Text("version :$version"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  try {
+                    InAppUpdate.startFlexibleUpdate().then((result) {
+                      if (result == AppUpdateResult.success) {
+                        Fluttertoast.showToast(msg: 'Update Success !');
+                      } else if (result == AppUpdateResult.inAppUpdateFailed) {
+                        Fluttertoast.showToast(msg: 'Update Failed !');
+                      } else if (result == AppUpdateResult.userDeniedUpdate) {
+                        Fluttertoast.showToast(msg: 'Update Denied !');
+                      }
+                    });
+                  } catch (err) {
+                    Fluttertoast.showToast(msg: err.toString());
+                  }
+                },
+                child: const Text('Background update!'),
+              ),
+              TextButton(
+                onPressed: () {
+                  try {
+                    InAppUpdate.performImmediateUpdate().then((result) {
+                      if (result == AppUpdateResult.success) {
+                        Fluttertoast.showToast(msg: 'Update Success !');
+                      } else if (result == AppUpdateResult.inAppUpdateFailed) {
+                        Fluttertoast.showToast(msg: 'Update Failed !');
+                      } else if (result == AppUpdateResult.userDeniedUpdate) {
+                        Fluttertoast.showToast(msg: 'Update Denied !');
+                      }
+                    }).catchError((e) => showToast(e.toString()));
+                  } catch (err) {
+                    Fluttertoast.showToast(msg: err.toString());
+                  }
+                },
+                child: const Text('Immediate update!'),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -109,32 +200,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                   const Text("Check for update! "),
                                   const Spacer(),
                                   GestureDetector(
-                                    onTap: () async {
-                                      try {
-                                        await InAppUpdate.checkForUpdate()
-                                            .then((info) {
-                                          if (info.updateAvailability ==
-                                              UpdateAvailability
-                                                  .updateAvailable) {
-                                            var update =
-                                                info.availableVersionCode;
-
-                                            showToast(
-                                                'Update Available ! $update');
-                                            InAppUpdate.performImmediateUpdate()
-                                                .catchError((e) =>
-                                                    showToast(e.toString()));
-                                          } else {
-                                            showToast(
-                                                'No Updates available !! Please try later! ');
-                                          }
-                                        }).catchError((e) {
-                                          showToast(e.toString());
-                                        });
-                                      } catch (er) {
-                                        showToast(er.toString());
-                                      }
-                                    },
+                                    onTap: confirmUpdate,
                                     child: const Icon(Icons.update),
                                   )
                                 ],
