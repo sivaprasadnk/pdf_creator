@@ -29,8 +29,9 @@ class _CreateScreenState extends State<CreateScreen> {
   confirmUpdate(BuildContext contxt) async {
     try {
       await InAppUpdate.checkForUpdate().then((update) {
-        if (update.updateAvailability != UpdateAvailability.updateAvailable) {
+        if (update.updateAvailability == UpdateAvailability.updateAvailable) {
           var version = update.availableVersionCode;
+          
           showDialog(
               context: contxt,
               useRootNavigator: false,
@@ -93,6 +94,8 @@ class _CreateScreenState extends State<CreateScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.pop(contxt);
                     startFlexibleUpdate(ctx);
                   },
                   child: const Text('Background update!'),
